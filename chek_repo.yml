@@ -1,0 +1,31 @@
+---
+- name: Create directory, mount device, and check dnf repolist
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create directory /tmp/media
+      file:
+        path: /tmp/media
+        state: directory
+        mode: '0755'
+
+    - name: Mount /dev/sr0 to /tmp/media
+      command: mount -o loop /dev/sr0 /tmp/media
+      register: mount_result
+      ignore_errors: yes
+
+    - name: Ensure /dev/sr0 is mounted
+      mount:
+        path: /tmp/media
+        src: /dev/sr0
+        fstype: iso9660
+        opts: loop
+        state: mounted
+
+    - name: Check dnf repolist
+      command: dnf repolist -v
+      register: dnf_repolist_output
+
+    - name: Display repolist output
+      debug:
+        var: dnf_repolist_output.stdout_lines

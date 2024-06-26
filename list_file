@@ -1,0 +1,8 @@
+ tasks:
+    - name: List files in /etc/yum.repos.d/
+      command: ls /etc/yum.repos.d/
+      register: yum_repos_list
+
+    - name: Display list of files in /etc/yum.repos.d/
+      debug:
+        var: yum_repos_list.stdout_lines

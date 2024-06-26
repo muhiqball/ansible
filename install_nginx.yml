@@ -1,0 +1,17 @@
+---
+- name: Check dnf repolist and install nginx
+  hosts: all
+  become: yes
+  tasks:
+    - name: Check dnf repolist
+      command: dnf repolist -v
+      register: dnf_repolist_output
+
+    - name: Display repolist output
+      debug:
+        var: dnf_repolist_output.stdout_lines
+
+    - name: Install nginx
+      dnf:
+        name: nginx
+        state: present
